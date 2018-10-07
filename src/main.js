@@ -13,3 +13,9 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+
+router.beforeEach((to,from,next) => {
+  window.document.title = to.meta.title;
+  next()
+});
