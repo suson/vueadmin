@@ -10,11 +10,11 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
+      name: 'desktop',
       meta:{
-      	title: '登录页面'
+      	title: '首页'
       },
-      component: HelloWorld
+      component: desktop
     },
     {
       path: '/index',
