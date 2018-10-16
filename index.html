@@ -3,10 +3,460 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>vueadmin</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="alternate icon" type="image/png" href="/static/img/favicon.png">
+	<link href="./static/css/bootstrap.min.css" rel="stylesheet">
+	<link href="./static/css/font-awesome.min.css" rel="stylesheet">
+	<link href="./static/css/toastr.min.css" rel="stylesheet">
+	<link href="./static/css/sweetalert.css" rel="stylesheet">
+	<link href="./static/css/animate.css" rel="stylesheet">
+	<link href="./static/css/style.css" rel="stylesheet">
+	<link href="./static/css/toastr.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="./static/css/iconfont.css">
+	<link rel="stylesheet" href="./static/css/switchery.min.css">
+	<link href="./static/css/index.css" rel="stylesheet">
+
+	<link href="./static/css/ladda-themeless.min.css" rel="stylesheet">
+	<script src="./static/js/jquery-3.2.1.min.js"></script>
+	<script src="./static/js/cookie.js"></script>
+	<script src="./static/js/vue.min.js"></script>
+	<script src="./static/js/index.js"></script>
+	<script src="./static/js/fundebug.0.3.6.min.js" apikey="9ca9151bee93ed78c168265f1cad030dca4f7b204e1c877f85458f0aa355d17a"></script>
+
+	<script src="./static/js/bootstrap.min.js"></script>
+	<script src="./static/js/inspinia.js"></script>
+	<script src="./static/js/jquery.metismenu.js"></script>
+	<script src="./static/js/jquery.slimscroll.min.js"></script>
+	<script src="./static/js/pace.min.js"></script>
+	<script src="./static/js/toastr.min.js"></script>
+	<script src="./static/js/spin.min.js"></script>
+	<script src="./static/js/ladda.min.js"></script>
+	<script src="./static/js/ladda.jquery.min.js"></script>
+	<script src="./static/js/jquery.validate.min.js"></script>
+	<script src="./static/js/validate_msg_cn.js" async defer></script>
+	<script src="./static/js/switchery.min.js" async defer></script>
+	<script src="./static/js/sweetalert.min.js" async defer></script>
+	<script src="./static/js/iconfont.js"></script>
+	<script src="./static/js/jquery.resizablecolumns.js"></script>
+	<script src="./static/js/footable.all.min.js"></script>
+    <title>帮站 | 
+任务列表</title>
+
   </head>
   <body>
     <div id="app"></div>
+    <div>
+    	<script type="text/javascript">
+	    var handleUrl = "/Task/handle";
+	    var l = $('.js-batch-set').ladda();
+	    l.click(function () {
+	        var tips = $(this).data('tips');
+
+	        var ids = checkedValue(); //选择的任务
+	        if (!ids) {
+	            toastr.error('请选择任务');
+	            return false;
+	        }
+	        var action = $(this).data('action');
+	        $(this).ladda('start');
+	        doAction(ids, action, tips);
+	    });
+
+
+	    $('.do-action-copy-as').click(function () {
+	        var tips = $(this).data('tips');
+
+	        var ids = checkedValue(); //选择的任务
+	        if (!ids) {
+	            return false;
+	        }
+	        var action = $(this).data('action');
+
+	        var type = $(this).data('type');
+	        doAction(ids, action, tips, {type: type});
+	    });
+
+	    $('.btn-doAction').on('click', function () {
+	        var tips = $(this).data('tips');
+	        var ids = $(this).data('id');
+	        var action = $(this).data('action');
+	        var status = $(this).data('status');
+	        doAction(ids, action, tips);
+	    })
+
+	    function doAction(ids, action, tips, extend) {
+	        if (!ids) {
+	            return false;
+	        }
+	        if (ids.length < 1) {
+	            return false;
+	        }
+	        if (ids instanceof Array) {
+	            var a = ids.join(',');
+	        } else {
+	            var a = ids;
+	        }
+	        var text = "编号:" + a;
+	        if (action == 'del') {
+	            text = '删除的任务将无法找回,并返还未使用积分!';
+	        }
+	        swal({
+	                title: tips ? "确定" + tips + '?' : '确定操作',
+	                text: text,
+	                type: "warning",
+	                showCancelButton: true,
+	                confirmButtonColor: "#DD6B55",
+	                confirmButtonText: "确定",
+	                cancelButtonText: "取消",
+	                closeOnConfirm: true,
+	                closeOnCancel: true,
+	                showLoaderOnConfirm: true,
+	            },
+	            function (isConfirm) {
+	                if (!isConfirm) {
+	                    l.ladda('stop');
+	                    return;
+	                }
+	                var postdata = {action: action, id: ids}
+	                if (extend) {
+	                    $.extend(postdata, extend);
+	                }
+	                $.post(handleUrl, postdata, function (json) {
+	                    setTimeout(function () {
+	                        if (json.code == 1) {
+	                            swal({
+	                                title: "操作成功",
+	                                text: json.msg,
+	                                type: "success",
+	                                timer: 3000
+	                            }, function () {
+	                                location.reload();
+	                            });
+	                        } else {
+	                            swal({
+	                                title: "操作失败",
+	                                text: json.msg,
+	                                type: "error",
+	                            }, function () {
+	                                location.reload();
+	                            });
+	                        }
+	                    }, 100)
+	                });
+
+	            });
+	    }
+
+	    function openWin(url) {
+	        window.open(url, 'newwindow', 'height=600, width=900, top=100,left=100,toolbar=no, menubar=no, scrollbars=no,resizable=no,location=no, status=no');
+	    }
+	</script>
+	<script>
+    var tags='全部分组'
+    var url="/1?o=6&os=1&page=1";
+    var setTagsObj=new Vue({
+        el: '#set-tags',
+        data: function() {
+            return {
+                visible: false ,
+                ids:[],
+                tags:JSON.parse('["\u5168\u90e8\u5206\u7ec4","\u6ca1\u6709\u5206\u7ec4"]'),
+                tags1: tags,
+                tags2: []
+            }
+        },
+        metdods: {
+            changeTag:function () {
+                tags=this.tags1
+                window.location.href=url+"&tags="+tags;
+            },
+            apply:function () {
+                var self=this;
+                $.ajax({
+                    url:'/task/handle',
+                    data:{'action':'set-tags','id':self.ids,'tags':self.tags2},
+                    type:'post',
+                    success:function (json) {
+                        if(json.code==1){
+                            window.location.reload();
+                        }else{
+                            swal({
+                                type:'error',
+                                text:json.msg,
+                                title:'操作失败'
+                            })
+                        }
+                    }
+                })
+            }
+        }
+
+    })
+    $(function () {
+        $('.btn-set-tag').on('click', function () {
+            var ids=checkedValue();
+            if(!ids){
+                return;
+            }
+            setTagsObj.ids = ids;
+            setTagsObj.visible = true;
+        });
+    })
+</script>
+
+<script type="text/javascript">
+    var ueditor_url = "http://www.seoyanfa.com/home/ueditor/index.html";
+    //表格中的全选操作
+    $('.js-check-all').click(function (event) {
+        var checkboxs = $(this).parents('table').find('input.js-check');
+        var allChecked = $(this).prop('checked');
+        if (allChecked) {
+            checkboxs.prop('checked', 'checked');
+        } else {
+            checkboxs.prop('checked', false);
+        }
+    });
+
+    function mailactive() {
+        $.get("http://www.seoyanfa.com/Home/Login/handle.html?action=mailactive", function (data) {
+            toastr.success(data.msg);
+        })
+    }
+
+    function openWin(url) {
+        window.open(url, 'newwindow', 'height=600, width=900, top=100,left=100,toolbar=no, menubar=no, scrollbars=no,resizable=no,location=no, status=no');
+    }
+
+    function errorCallback() {
+        return false;
+    }
+
+    //获取表格中checked的值的集合
+    function checkedValue() {
+        var jsCheck = $('.js-check:checked');
+        var value = [];
+        if (jsCheck.length < 1) {
+            //alert('请选择列表!');
+            return false;
+        }
+
+        $.each(jsCheck, function (i, v) {
+            value.push($(v).val());
+        });
+        return value;
+    }
+
+    //消息通知
+    toastr.options = {
+        "closeButton": false, //关闭按钮
+        "debug": false, //调试开关
+        "progressBar": true, //进度条
+        "preventDuplicates": true, //防止重复
+        "positionClass": "toast-top-right", //顶部中间
+        "onclick": null, //点击回调
+        "showDuration": "400", //显示时间
+        "hideDuration": "1000", //隐藏时间
+        "timeOut": "2000", //缓冲时间
+        "extendedTimeOut": "1000",
+        "showEasing": "swing", //显示动画
+        "hideEasing": "linear", //隐藏动画
+        "showMethod": "fadeIn", //显示方式
+        "hideMethod": "fadeOut" //隐藏方式
+    };
+
+    //js 表单提交
+    $('form.js-ajax').submit(function (e) {
+        e.preventDefault();
+        if (typeof rules == 'undefined') {
+            $(this).validate();
+        } else {
+            $(this).validate(rules);
+        }
+
+        var input = $(this).serialize();
+        var url = $(this).attr('action');
+        var method = $(this).attr('method');
+        $.ajax({
+            url: url,
+            type: method,
+            dataType: 'json',
+            data: input,
+        })
+            .done(function (res) {
+                if (res.code) {
+                    toastr.success(res.msg);
+                    if (res.url) {
+                        if (res.url == 'reload') {
+                            setTimeout(function () {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            setTimeout(function () {
+                                location.href = res.url;
+                            }, 2000);
+                        }
+                    }
+                } else {
+                    toastr.error(res.msg);
+                    if (typeof errorCallback != 'undefined') {
+                        errorCallback();
+                    }
+                }
+            })
+            .fail(function () {
+
+            })
+            .always(function () {
+            });
+
+    });
+
+    //js按钮动作
+    $('.js-btn').click(function (e) {
+        e.preventDefault();
+        var _this = $(this);
+        var url = _this.data('action');
+        _this.prop('disabled', 'disabled');
+        $.get(url, function (data) {
+            if (data.code) {
+                toastr.success(data.msg);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                toastr.error(data.msg);
+                _this.prop('disabled', false);
+            }
+        });
+    });
+
+    //a链接异步提交
+    $('.js-a').click(function (e) {
+        e.preventDefault();
+        var _this = $(this);
+        var url = _this.attr('href');
+        _this.prop('disabled', 'disabled');
+        $.get(url, function (data) {
+            if (data.code) {
+                toastr.success(data.msg);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                toastr.error(data.msg);
+                _this.prop('disabled', false);
+            }
+        });
+    });
+
+
+</script>
+<script type="text/javascript">
+    var handleUrl = "/Task/handle";
+    var l = $('.js-batch-set').ladda();
+    l.click(function () {
+        var tips = $(this).data('tips');
+
+        var ids = checkedValue(); //选择的任务
+        if (!ids) {
+            toastr.error('请选择任务');
+            return false;
+        }
+        var action = $(this).data('action');
+        $(this).ladda('start');
+        doAction(ids, action, tips);
+    });
+
+
+    $('.do-action-copy-as').click(function () {
+        var tips = $(this).data('tips');
+
+        var ids = checkedValue(); //选择的任务
+        if (!ids) {
+            return false;
+        }
+        var action = $(this).data('action');
+
+        var type = $(this).data('type');
+        doAction(ids, action, tips, {type: type});
+    });
+
+    $('.btn-doAction').on('click', function () {
+        var tips = $(this).data('tips');
+        var ids = $(this).data('id');
+        var action = $(this).data('action');
+        var status = $(this).data('status');
+        doAction(ids, action, tips);
+    })
+
+    function doAction(ids, action, tips, extend) {
+        if (!ids) {
+            return false;
+        }
+        if (ids.length < 1) {
+            return false;
+        }
+        if (ids instanceof Array) {
+            var a = ids.join(',');
+        } else {
+            var a = ids;
+        }
+        var text = "编号:" + a;
+        if (action == 'del') {
+            text = '删除的任务将无法找回,并返还未使用积分!';
+        }
+        swal({
+                title: tips ? "确定" + tips + '?' : '确定操作',
+                text: text,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: true,
+                closeOnCancel: true,
+                showLoaderOnConfirm: true,
+            },
+            function (isConfirm) {
+                if (!isConfirm) {
+                    l.ladda('stop');
+                    return;
+                }
+                var postdata = {action: action, id: ids}
+                if (extend) {
+                    $.extend(postdata, extend);
+                }
+                $.post(handleUrl, postdata, function (json) {
+                    setTimeout(function () {
+                        if (json.code == 1) {
+                            swal({
+                                title: "操作成功",
+                                text: json.msg,
+                                type: "success",
+                                timer: 3000
+                            }, function () {
+                                location.reload();
+                            });
+                        } else {
+                            swal({
+                                title: "操作失败",
+                                text: json.msg,
+                                type: "error",
+                            }, function () {
+                                location.reload();
+                            });
+                        }
+                    }, 100)
+                });
+
+            });
+    }
+
+    function openWin(url) {
+        window.open(url, 'newwindow', 'height=600, width=900, top=100,left=100,toolbar=no, menubar=no, scrollbars=no,resizable=no,location=no, status=no');
+    }
+</script>
+    </div>
     <!-- built files will be auto injected -->
   </body>
 </html>
