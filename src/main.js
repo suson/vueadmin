@@ -6,7 +6,7 @@ import router from './router'
 import VueResource from 'vue-resource'
 Vue.use(VueResource)
 Vue.config.productionTip = false
-
+Vue.prototype.HOST = 'http://www.service.com'
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

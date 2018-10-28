@@ -11,7 +11,7 @@
 </span>
             <a data-toggle="dropdown" class="dropdown-toggle" href="javascript:;" aria-expanded="true">
 <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold"></strong>
-</span> <span class="text-muted text-xs block">欢迎回来,一直小毛虫 <b class="caret"></b></span> </span> </a>
+</span> <span class="text-muted text-xs block">欢迎回来,{{user_info.name}} <b class="caret"></b></span> </span> </a>
             <ul class="dropdown-menu animated fadeInRight m-t-xs">
               <li><a href="/signout">退出</a></li>
             </ul>
@@ -23,7 +23,14 @@
         <li>
           <a href="/"><i class="fa fa-th-large"></i> <span class="nav-label">首页</span></a>
         </li>
-        <li class="">
+        <li class="" v-for="tabItem in tabList">
+          <a href="javascript:void(0);"> <i :class="tabItem.class"></i> <span class="nav-label">{{tabItem.title}}</span><i class="fa arrow"></i></a>
+          <ul class="nav nav-second-level collapse" style="height: 0px;">
+            <li v-for="subItem in tabItem.subtab"><a href="javascript:void(0);" :style="subItem.style" @click="select_tab(subItem,tabItem.subtab)">{{subItem.title}}<span v-if="subItem.total>=0" class="label label-success pull-right">{{subItem.total}}</span></a>
+            </li>
+          </ul>
+        </li>
+        <!-- <li class="">
           <a href="javascript:void(0);"> <i class="iconfont icon-baidu"></i> <span class="nav-label">百度任务</span><i class="fa arrow"></i></a>
           <ul class="nav nav-second-level collapse" style="height: 0px;">
             <li><a href="/3.html">百度排名<span class="label label-success pull-right">0</span></a>
@@ -102,9 +109,9 @@
             <li><a href="/mall.html">积分充值</a></li>
             <li><a href="/recharge.html">充值记录</a></li>
           </ul>
-        </li>
+        </li> -->
         <li>
-          <a @click="turn" href="javascript:void(0);" >
+          <a @click="logout" href="javascript:void(0);" >
 <i class="fa fa-sign-out"></i> <span class="nav-label" >退出</span>
 </a>
         </li>
@@ -115,22 +122,98 @@
 <script>
 export default {
   name: 'LeftContent',
+  mounted: function () {
+    this.$nextTick(function () {
+
+    })
+  },
+  props: ['user_info'],
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App..........'
+      msg: 'Welcome to Your Vue.js App..........',
+      selected_tab_style : {
+        color:'red'
+      },
+      tabList: [{
+        "name": "baidu",
+        "title": "百度任务",
+        "class":"iconfont icon-baidu",
+        "subtab":[
+          // {
+          //   total:0,
+          //   name:"百度排名",
+          //   title:"百度排名"
+          // },{
+          //   total:0,
+          //   name:"百度指数",
+          //   title:"百度指数"
+          // },{
+          //   total:0,
+          //   name:"手机百度",
+          //   title:"手机百度"
+          // },{
+          //   total:0,
+          //   name:"百度下拉",
+          //   title:"百度下拉"
+          // },{
+          //   total:0,
+          //   name:"相关搜索",
+          //   title:"相关搜索"
+          // },{
+          //   total:0,
+          //   name:"手机百度指数",
+          //   title:"手机百度指数"
+          // },{
+          //   total:0,
+          //   name:"手机百度下拉",
+          //   title:"手机百度下拉"
+          // },{
+          //   total:0,
+          //   name:"手机相关搜索",
+          //   title:"手机相关搜索"
+          // },
+          {
+            total:0,
+            name:"百度极速排名",
+            title:"百度极速排名"
+          }
+        ]
+      }
+      ]
     }
   },
   methods: {
-    turn: function() {
-      this.$http.get("/").then(response => {
+    logout: function() {
+      var url = this.HOST+'/service/urlcore/webreg.php?A=1';
+      this.$http.post(url,{f:8},{emulateJSON:true,withCredentials:true}).then(response => {
         // success callback
+        // this.$router.push('/')
+        window.location.href = this.HOST;
       }, response => {
         // error callback
       });
-      //this.$router.push('/')
+    },
+    select_tab: function(item,allItem){
+      
+      // console.log(this.user_info)
+      if (typeof item.style == 'undefined') {
+        this.$set(item,"style",this.selected_tab_style)
+      } else {
+        item.style = this.selected_tab_style;
+      }
+      // console.log(allItem)
+      for (var i in allItem) {
+        if (allItem[i].name == item.name) {
+          break; 
+        }
+        allItem[i].style = "";
+      }
+
     }
   }
 }
+
+
 
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->

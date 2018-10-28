@@ -7,7 +7,7 @@
     <div class="collapse pos-rlt navbar-collapse b-b bg-white-only">
       <ul class="nav navbar-nav navbar-left">
         <li class="hidden-xs hidden-sm hidden-md" style="padding:15px 10px 10px 20px;">
-          <span><label class="control-label m-r-xs">会员</label><a class="text-u-l text-danger" href="/ucenter.html">21549182@qq.com</a>
+          <span><label class="control-label m-r-xs">会员</label><a class="text-u-l text-danger" href="/">{{user_info.name}}</a>
 </span>
         </li>
         <li style="padding: 15px 10px 10px 20px;">
@@ -77,6 +77,7 @@
 <script>
 export default {
   name: 'navt',
+  props: ['user_info'],
   data() {
     return {
       msg: 'this is nav'

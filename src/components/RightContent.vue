@@ -1,6 +1,6 @@
 <template>
   <div id="page-wrapper" class="gray-bg" style="min-height: 632px;">
-    <navt />
+    <navt :user_info="user_info" />
     <div class="wrapper wrapper-content" style="padding:10px 5px">
       <div class=" ">
         <div class="ibox float-e-margins">
@@ -209,7 +209,7 @@
           <label class="ladda-button btn btn-sm btn-info js-batch-set" data-style="zoom-in" data-action="pause" data-tips="暂停"><span class="ladda-label"> <i class="fa fa-pause"></i> 暂停 </span><span class="ladda-spinner"></span></label>
           <label class="ladda-button btn btn-sm btn-primary js-batch-set" data-style="zoom-in" data-action="recover" data-tips="恢复"><span class="ladda-label"> <i class="fa fa-play"></i> 恢复 </span><span class="ladda-spinner"></span></label>
           <label class="ladda-button btn btn-sm btn-success js-batch-set" data-style="zoom-in" data-action="restart" data-tips="重启"><span class="ladda-label"> <i class="fa fa-refresh"></i> 重启 </span><span class="ladda-spinner"></span></label>
-          <label class="ladda-button btn btn-sm btn-danger js-batch-set" data-style="zoom-in" data-action="del" data-tips="删除"><span class="ladda-label"> <i class="fa fa-trash"></i> 删除 </span><span class="ladda-spinner"></span></label>
+          <label class="ladda-button btn btn-sm btn-danger js-batch-set" data-style="zoom-in" @click="del" data-action="del" data-tips="删除"><span class="ladda-label"> <i class="fa fa-trash"></i> 删除 </span><span class="ladda-spinner"></span></label>
         </div>
         <div>
         </div>
@@ -224,9 +224,33 @@ import navt from './navt'
 export default {
   name: 'rightContent',
   components: { navt },
+  props: ['user_info'],
   data() {
     return {
       msg: 'Welcome to Your Vue.js App..........'
+    }
+  },
+  methods:{
+    del:function(){
+      alert('del');
+      //消息通知
+    toastr.options = {
+        "closeButton": false, //关闭按钮
+        "debug": false, //调试开关
+        "progressBar": false, //进度条
+        "preventDuplicates": true, //防止重复
+        "positionClass": "toast-top-center", //顶部中间
+        "onclick": null, //点击回调
+        "showDuration": "400", //显示时间
+        "hideDuration": "1000", //隐藏时间
+        "timeOut": "2000", //缓冲时间
+        "extendedTimeOut": "1000",
+        "showEasing": "swing", //显示动画
+        "hideEasing": "linear", //隐藏动画
+        "showMethod": "fadeIn", //显示方式
+        "hideMethod": "fadeOut" //隐藏方式
+    };
+      toastr.success('请选择任务');
     }
   }
 }
