@@ -3,9 +3,10 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-
+import VueResource from 'vue-resource'
+Vue.use(VueResource)
 Vue.config.productionTip = false
-
+Vue.prototype.HOST = 'http://www.service.com'
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
@@ -13,3 +14,9 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+
+router.beforeEach((to,from,next) => {
+  window.document.title = to.meta.title;
+  next()
+});
