@@ -1,7 +1,7 @@
 <template>
   <div>
-    <left-content :user_info="user_info"/>
-    <right-content :user_info="user_info"/>
+    <left-content :user_info="user_info" @changeRight="changeRight" :table_config="table_config"/>
+    <right-content :user_info="user_info" :table_config="table_config"/>
   </div>
 </template>
 
@@ -38,12 +38,13 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App..........',
-      user_info:{}
+      user_info:{},
+      table_config:{}
     }
   },
   methods:{
     getUserInfo:function(){
-      var url = this.HOST+'/service/urlcore/webreg.php?A=1';
+      var url = this.HOST+'/service/urlcore/webreg.php?m=getUserInfo';
       this.$http.post(url,{f:7},{emulateJSON:true,withCredentials:true}).then(response => {
         if (response.body) {
           this.user_info = response.body
@@ -51,6 +52,11 @@ export default {
       },response => {
 
       });
+    },
+    changeRight:function(data){
+      console.log(data);
+      this.table_config=data;
+      console.log(this.$refs);
     }
   }
 }

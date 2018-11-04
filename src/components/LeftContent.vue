@@ -127,7 +127,7 @@ export default {
 
     })
   },
-  props: ['user_info'],
+  props: ['user_info','table_config'],
   data() {
     return {
       msg: 'Welcome to Your Vue.js App..........',
@@ -174,7 +174,7 @@ export default {
           // },
           {
             total:0,
-            name:"百度极速排名",
+            name:"baidu_speed",
             title:"百度极速排名"
           }
         ]
@@ -184,7 +184,7 @@ export default {
   },
   methods: {
     logout: function() {
-      var url = this.HOST+'/service/urlcore/webreg.php?A=1';
+      var url = this.HOST+'/service/urlcore/webreg.php';
       this.$http.post(url,{f:8},{emulateJSON:true,withCredentials:true}).then(response => {
         // success callback
         // this.$router.push('/')
@@ -194,8 +194,8 @@ export default {
       });
     },
     select_tab: function(item,allItem){
-      
-      // console.log(this.user_info)
+      this.$emit('changeRight',item);
+      console.log(item.name)
       if (typeof item.style == 'undefined') {
         this.$set(item,"style",this.selected_tab_style)
       } else {
