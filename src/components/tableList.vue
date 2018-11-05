@@ -167,8 +167,8 @@
                 <th style="text-align: center;">总次数</th>
               </tr> -->
             </thead>
-            <tbody>
-              <tr v-for="item in listData">
+              <transition-group name="list" tag="tbody">
+              <tr v-for="item in listData" v-bind:key="item.urlid">
                 <td><input type="checkbox" @click="selectItem(item)" v-model="item.checked">{{item.urlid}}</td>
                 <td :title="item.name">{{item.name}}</td>
                 <td :title="item.turl">{{item.turl}}</td>
@@ -176,9 +176,11 @@
                 <td>{{item.online | urlStatusName}}-{{item.free | shareStatusName}}</td>
                 <td></td>
               </tr>
-
-                <tr v-if="listData.length<1"><td colspan="20" style="text-align: center;font-size: 20px;">没有数据</td></tr>
-            </tbody>
+                </transition-group>
+                <tbody  v-if="listData.length<1">
+                  
+                  <tr><td colspan="20" style="text-align: center;font-size: 20px;">没有数据</td></tr>
+                </tbody>
             <tfoot>
               <tr>
                 <td style="vertical-align:middle;"><input type="checkbox" class="i-checks js-check-all" style="margin-right:10px "  v-model="checkAll" @click="selectAll"><a href="javascript:void(0)" class="sort sort-desc" data-noresize="">ID</a></td>
@@ -415,4 +417,16 @@ export default {
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.list-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.list-enter-active, .list-leave-active {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to
+/* .list-leave-active for below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
+}
 </style>
