@@ -11,7 +11,7 @@
                 <a role="createTask" class="btn-rounded-xxs btn btn-info btn-sm" href="./task1.html">
 创建新任务
 </a>
-                <div class="btn-group">
+                <div class="btn-group hide">
                   <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle"> 显示 {{pageCount}} 条 <span class="caret"></span></button>
                   <ul class="dropdown-menu">
                     <li><a @click="setPageView(20)">20</a></li>
@@ -21,7 +21,7 @@
                   </ul>
                 </div>
               </div>
-              <div class="col-lg-6 col-md-12 col-sm-12 text-right">
+              <div class="col-lg-6 col-md-12 col-sm-12 text-right hide">
                 <form method="get" role="form" class="form-inline">
                   <div class="form-group">
                     <input type="text" name="key" placeholder="" class="form-control" value="">
@@ -98,8 +98,8 @@
             </form>
           </div>
         </div>
-        <hr>
-        <div class="row">
+        <hr class="hide">
+        <div class="row hide">
           <div class="col-lg-6  status-radio-div">
             <span class="title">状态筛选:</span>
             <ul>
@@ -137,47 +137,43 @@
       </div>
       <div class="ibox-content" style="padding:15px">
         <div class="table-responsive">
-          <div class="rc-handle-container" style="width: 1359px;">
+          <!-- <div class="rc-handle-container" style="width: 1359px;">
             <div class="rc-handle" style="left: 159px; height: 153px;"></div>
             <div class="rc-handle" style="left: 299px; height: 153px;"></div>
             <div class="rc-handle" style="left: 398px; height: 153px;"></div>
             <div class="rc-handle" style="left: 797px; height: 153px;"></div>
             <div class="rc-handle" style="left: 967px; height: 153px;"></div>
             <div class="rc-handle" style="left: 1124px; height: 153px;"></div>
-          </div>
+          </div> -->
           <table class="table table-bordered " id="tasklist">
             <thead>
               <tr>
-                <th rowspan="2" style="vertical-align: middle; width: 11.63%;"><input type="checkbox" class="i-checks js-check-all" style="margin-right:10px "><a href="javascript:void(0)" class="sort sort-asc" data-noresize="">ID</a></th>
+                <th rowspan="2" style="vertical-align: middle; width: 11.63%;"><input type="checkbox" class="i-checks js-check-all" style="margin-right:10px " v-model="checkAll" @click="selectAll"><a href="javascript:void(0)" class="sort sort-asc" data-noresize="">ID</a></th>
                 <th rowspan="2" style="vertical-align: middle; width: 10.23%;">
-                  <a href="javascript:void(0);" class="sort ">标题</a>
+                  标题
                 </th>
-                <th rowspan="2" style="vertical-align: middle; width: 7.21%;" class="hidden-md hidden-sm  hidden-xs">URL</th>
-                <th colspan="3" style="vertical-align: middle; text-align: center; width: 29.51%;">次数</th>
-                <th rowspan="2" style="vertical-align: middle; text-align: center; width: 12.51%;" class="hidden-md hidden-sm  hidden-xs">总分值</th>
-                <th rowspan="2" style="vertical-align: middle; text-align: center; width: 11.55%;" class="hidden-md hidden-sm  hidden-xs">
+                <th rowspan="2" style="vertical-align: middle;" class="hidden-md hidden-sm  hidden-xs">URL</th>
+                <!-- <th colspan="3" style="vertical-align: middle; text-align: center; width: 29.51%;" class="hide">次数</th> -->
+                <th rowspan="2" style="vertical-align: middle; text-align: center; width: 9.51%;" class="hidden-md hidden-sm  hidden-xs">今日分享</th>
+                <!-- <th rowspan="2" style="vertical-align: middle; text-align: center; width: 11.55%;" class="hide hidden-md hidden-sm  hidden-xs">
                   自动重启
-                </th>
-                <th rowspan="2" style="vertical-align: middle; width: 10.38%;"><a href="/1?o=4&amp;os=1&amp;page=&amp;tags=全部分组" class="sort ">状态</a></th>
+                </th> -->
+                <th rowspan="2" style="vertical-align: middle; width: 10.38%;">状态</th>
                 <th rowspan="2" style="vertical-align: middle; width: 7.21%;" data-noresize="">操作</th>
               </tr>
-              <tr style="font-size:9px">
+              <!-- <tr style="font-size:9px" class="hide">
                 <th style="text-align: center;">今日</th>
                 <th style="text-align: center;">已完成</th>
                 <th style="text-align: center;">总次数</th>
-              </tr>
+              </tr> -->
             </thead>
             <tbody>
               <tr v-for="item in listData">
-                <td>{{item.urlid}}</td>
-                <td>{{item.name}}</td>
-                <td>{{item.turl}}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{{item.online}}</td>
+                <td><input type="checkbox" @click="selectItem(item)" v-model="item.checked">{{item.urlid}}</td>
+                <td :title="item.name">{{item.name}}</td>
+                <td :title="item.turl">{{item.turl}}</td>
+                <td>{{item.tdclick}}</td>
+                <td>{{item.online | urlStatusName}}-{{item.free | shareStatusName}}</td>
                 <td></td>
               </tr>
 
@@ -185,19 +181,20 @@
             </tbody>
             <tfoot>
               <tr>
-                <td style="vertical-align:middle;"><input type="checkbox" class="i-checks js-check-all" style="margin-right:10px "><a href="javascript:void(0)" class="sort sort-desc" data-noresize="">ID</a></td>
+                <td style="vertical-align:middle;"><input type="checkbox" class="i-checks js-check-all" style="margin-right:10px "  v-model="checkAll" @click="selectAll"><a href="javascript:void(0)" class="sort sort-desc" data-noresize="">ID</a></td>
                 <td style="vertical-align:middle;">
-                  <a href="javascript:void(0);" class="sort ">标题</a>
+                  标题
+                  <!-- <a href="javascript:void(0);" class="sort ">标题</a> -->
                 </td>
                 <td style="vertical-align:middle;" class="hidden-md hidden-sm  hidden-xs">URL</td>
-                <td style="text-align: center;">今日</td>
-                <td style="text-align: center;">已完成</td>
-                <td style="text-align: center;">总次数</td>
-                <td style="vertical-align:middle;text-align: center;" class="hidden-md hidden-sm  hidden-xs">总分值</td>
-                <td style="vertical-align:middle; text-align: center" class="hidden-md hidden-sm  hidden-xs">
+                <!-- <td style="text-align: center;" class="hide">今日</td>
+                <td style="text-align: center;" class="hide">已完成</td>
+                <td style="text-align: center;" class="hide">总次数</td> -->
+                <td style="vertical-align:middle;text-align: center;" class="hidden-md hidden-sm  hidden-xs">今日分享</td>
+                <!-- <td style="vertical-align:middle; text-align: center" class="hide hidden-md hidden-sm  hidden-xs">
                   自动重启
-                </td>
-                <td style="vertical-align:middle;"><a href="javascript:void(0);" class="sort ">状态</a></td>
+                </td> -->
+                <td style="vertical-align:middle;">状态</td>
                 <td style="vertical-align:middle;" data-noresize="">操作</td>
               </tr>
             </tfoot>
@@ -205,7 +202,7 @@
         </div>
       </div>
       <div class="ibox-footer">
-        <button type="button" class="btn-rounded-xxs btn btn-info btn-sm btn-set-tag">
+        <!-- <button type="button" class="btn-rounded-xxs btn btn-info btn-sm btn-set-tag">
           设置分组
         </button>
         <button class="btn-rounded-xxs btn btn-info btn-sm js-batch-set ladda-button" data-action="time-set" data-tips="设置智能时间控制" data-style="expand-right"><span class="ladda-label">
@@ -213,11 +210,12 @@
 </span><span class="ladda-spinner"></span></button>
         <a class="btn-rounded-xxs btn btn-info btn-sm" href="/home/task/export">
 导出任务数据
-</a>
+</a> -->
         <div data-toggle="buttons" class="btn-group m-r">
-          <label class="ladda-button btn btn-sm btn-info js-batch-set" data-style="zoom-in" data-action="pause" data-tips="暂停"><span class="ladda-label"> <i class="fa fa-pause"></i> 暂停 </span><span class="ladda-spinner"></span></label>
-          <label class="ladda-button btn btn-sm btn-primary js-batch-set" data-style="zoom-in" data-action="recover" data-tips="恢复"><span class="ladda-label"> <i class="fa fa-play"></i> 恢复 </span><span class="ladda-spinner"></span></label>
-          <label class="ladda-button btn btn-sm btn-success js-batch-set" data-style="zoom-in" data-action="restart" data-tips="重启"><span class="ladda-label"> <i class="fa fa-refresh"></i> 重启 </span><span class="ladda-spinner"></span></label>
+          <!-- <label class="ladda-button btn btn-sm btn-info js-batch-set" data-style="zoom-in" data-action="pause" data-tips="暂停"><span class="ladda-label"> <i class="fa fa-pause"></i> 暂停 </span><span class="ladda-spinner"></span></label> -->
+          <label @click="operate(0)" class="ladda-button btn btn-sm btn-info js-batch-set" data-style="zoom-in" data-action="pause" data-tips="停止"><span class="ladda-label"> <i class="fa fa-stop"></i> 停止 </span><span class="ladda-spinner"></span></label>
+          <label @click="operate(1)" class="ladda-button btn btn-sm btn-primary js-batch-set" data-style="zoom-in" data-action="recover" data-tips="开始"><span class="ladda-label"> <i class="fa fa-play"></i> 开始 </span><span class="ladda-spinner"></span></label>
+          <!-- <label class="ladda-button btn btn-sm btn-success js-batch-set" data-style="zoom-in" data-action="restart" data-tips="重启"><span class="ladda-label"> <i class="fa fa-refresh"></i> 重启 </span><span class="ladda-spinner"></span></label> -->
           <label class="ladda-button btn btn-sm btn-danger js-batch-set" data-style="zoom-in" @click="del" data-action="del" data-tips="删除"><span class="ladda-label"> <i class="fa fa-trash"></i> 删除 </span><span class="ladda-spinner"></span></label>
         </div>
         <div>
@@ -233,6 +231,23 @@ export default {
   props: ['table_config'],
   mounted: function () {
     this.$nextTick(function () {
+      //消息通知
+      toastr.options = {
+          "closeButton": false, //关闭按钮
+          "debug": false, //调试开关
+          "progressBar": false, //进度条
+          "preventDuplicates": true, //防止重复
+          "positionClass": "toast-top-center", //顶部中间
+          "onclick": null, //点击回调
+          "showDuration": "400", //显示时间
+          "hideDuration": "1000", //隐藏时间
+          "timeOut": "2000", //缓冲时间
+          "extendedTimeOut": "1000",
+          "showEasing": "swing", //显示动画
+          "hideEasing": "linear", //隐藏动画
+          "showMethod": "fadeIn", //显示方式
+          "hideMethod": "fadeOut" //隐藏方式
+      };
       this.getList();
     })
   },
@@ -241,30 +256,73 @@ export default {
       msg: 'this is tableList',
       pageCount:20,
       sortType:0,
-      listData:[]
+      listData:[],
+      checkAll:false
+    }
+  },
+  filters: {
+    urlStatusName: function (value) {
+      var name = '';
+      switch(value.toString()) {
+        case '0':
+          name = '离线';
+          break;
+        case '1':
+          name = '在线';
+          break;
+
+      }
+      return name;
+    },
+    shareStatusName:function(value) {
+      var name = '';
+      switch(value.toString()) {
+        case '0':
+          name = '未分享';
+          break;
+        case '1':
+          name = '分享中';
+          break;
+
+      }
+      return name;
     }
   },
   methods:{
     del:function(){
-      alert('del');
-      //消息通知
-    toastr.options = {
-        "closeButton": false, //关闭按钮
-        "debug": false, //调试开关
-        "progressBar": false, //进度条
-        "preventDuplicates": true, //防止重复
-        "positionClass": "toast-top-center", //顶部中间
-        "onclick": null, //点击回调
-        "showDuration": "400", //显示时间
-        "hideDuration": "1000", //隐藏时间
-        "timeOut": "2000", //缓冲时间
-        "extendedTimeOut": "1000",
-        "showEasing": "swing", //显示动画
-        "hideEasing": "linear", //隐藏动画
-        "showMethod": "fadeIn", //显示方式
-        "hideMethod": "fadeOut" //隐藏方式
-    };
-      toastr.success('请选择任务');
+      var url = this.HOST+'/service/urlcore/webreg.php';
+      var ids=[];
+      for (var i in this.listData) {
+        if (this.listData[i].checked) {
+          ids.push(this.listData[i].urlid);
+        }
+      }
+      if (ids.length < 1) {
+        toastr.error('请选择任务');
+        return false;
+      }
+      var i = {
+        "ids":ids
+      }
+      i = JSON.stringify(i);
+      this.$http.post(url,{f:38,i:i},{emulateJSON:true,withCredentials:true}).then(response => {
+        if (response.body && response.body.error > -1) {
+          toastr.success('操作成功');
+          for (var i in ids) {
+            // console.log(ids[i])
+            for (var j in this.listData) {
+              if (ids[i] == this.listData[j].urlid) {
+                this.listData.splice(j,1);
+                break;
+              }
+            }
+          }
+        } else {
+          toastr.error(response.body.msg);
+        }
+      }, response => {
+        toastr.error('操作失败');
+      });
     },
     setPageView : function(count) {
       this.pageCount=count;
@@ -280,11 +338,77 @@ export default {
         // this.$router.push('/')
         if (response.body && response.body.urls) {
           this.listData = response.body.urls;
+          for (var i in this.listData) {
+            if (typeof this.listData[i].checked == 'undefined') {
+              this.$set(this.listData[i],'checked',false);
+            }
+          }
         }
       }, response => {
         // error callback
       });
+    },
+    // 单选
+    selectItem : function(item) {
+      item.checked = !item.checked;
+      console.log(this.listData)
+      var isAll = true;
+      for (var i in this.listData) {
+        if (this.listData[i].checked != true) {
+          isAll = false;
+          break;
+        }
+      }
+      console.log(isAll);
+      this.checkAll = isAll;
+    },
+    // 全选
+    selectAll:function(){
+      var selectedAll = !this.checkAll;
+      for (var i in this.listData) {
+        this.listData[i].checked = selectedAll
+      }
+    },
+    operate:function(type) {
+      var url = this.HOST+'/service/urlcore/webreg.php';
+      var ids=[];
+      for (var i in this.listData) {
+        if (this.listData[i].checked) {
+          ids.push(this.listData[i].urlid);
+        }
+      }
+      if (ids.length < 1) {
+        toastr.error('请选择任务');
+        return false;
+      }
+      var i = {
+        "free":type,
+        "ids":ids
+      }
+      i = JSON.stringify(i);
+      this.$http.post(url,{f:37,i:i},{emulateJSON:true,withCredentials:true}).then(response => {
+        // success callback
+        // this.$router.push('/')
+        // console.log(response.body.error)
+        if (response.body && response.body.error > -1) {
+          toastr.success('操作成功');
+          for (var i in ids) {
+            // console.log(ids[i])
+            for (var j in this.listData) {
+              if (ids[i] == this.listData[j].urlid) {
+                this.listData[j].free = type;
+                break;
+              }
+            }
+          }
+        } else {
+          toastr.error(response.body.msg);
+        }
+      }, response => {
+        toastr.error('操作失败');
+      });
     }
+
   }
 }
 

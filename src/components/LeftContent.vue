@@ -124,7 +124,7 @@ export default {
   name: 'LeftContent',
   mounted: function () {
     this.$nextTick(function () {
-
+      this.select_tab(this.tabList[0].subtab[0],this.tabList[0].subtab)
     })
   },
   props: ['user_info','table_config'],
