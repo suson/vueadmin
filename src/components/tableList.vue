@@ -253,6 +253,12 @@ export default {
       this.getList();
     })
   },
+  created:function() {
+    this.eventHub.$on('reloadList',this.getList);
+  },
+  updated:function() {
+
+  },
   data() {
     return {
       msg: 'this is tableList',

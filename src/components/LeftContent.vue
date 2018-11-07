@@ -195,6 +195,7 @@ export default {
     },
     select_tab: function(item,allItem){
       this.$emit('changeRight',item);
+      this.eventHub.$emit('reloadList',item);
       console.log(item.name)
       if (typeof item.style == 'undefined') {
         this.$set(item,"style",this.selected_tab_style)

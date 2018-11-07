@@ -7,6 +7,7 @@ import VueResource from 'vue-resource'
 Vue.use(VueResource)
 Vue.config.productionTip = false
 Vue.prototype.HOST = 'http://www.service.com'
+Vue.prototype.eventHub = new Vue();
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
