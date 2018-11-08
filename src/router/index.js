@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 // import LeftContent from '@/components/LeftContent'
 import desktop from '@/components/desktop'
+import addTask from '@/components/addTask'
 
 Vue.use(Router)
 
@@ -17,12 +17,12 @@ export default new Router({
       component: desktop
     },
     {
-      path: '/index',
-      name: 'desktop',
+      path: '/addTask',
+      name: 'addTask',
       meta:{
-      	title: '首页'
+      	title: '添加任务'
       },
-      component: desktop
+      component: addTask
     }
   ]
 })

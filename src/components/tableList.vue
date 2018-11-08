@@ -8,7 +8,7 @@
           <div class="ibox-heading" style="padding:15px">
             <div class="row">
               <div class="col-lg-6 col-md-12 col-sm-12">
-                <a role="createTask" class="btn-rounded-xxs btn btn-info btn-sm" href="./task1.html">
+                <a role="createTask" class="btn-rounded-xxs btn btn-info btn-sm" href="javascript:void(0);" @click="addTask">
 创建新任务
 </a>
                 <div class="btn-group hide">
@@ -167,7 +167,9 @@
                 <th style="text-align: center;">总次数</th>
               </tr> -->
             </thead>
-              <transition-group name="list" tag="tbody">
+              <!-- <transition-group name="list" tag="tbody"> -->
+              <tbody>
+                
               <tr v-for="item in listData" v-bind:key="item.urlid">
                 <td><input type="checkbox" @click="selectItem(item)" v-model="item.checked">{{item.urlid}}</td>
                 <td :title="item.name">{{item.name}}</td>
@@ -176,7 +178,8 @@
                 <td>{{item.online | urlStatusName}}-{{item.free | shareStatusName}}</td>
                 <td></td>
               </tr>
-                </transition-group>
+              </tbody>
+                <!-- </transition-group> -->
                 <tbody  v-if="listData.length<1">
                   
                   <tr><td colspan="20" style="text-align: center;font-size: 20px;">没有数据</td></tr>
@@ -415,6 +418,9 @@ export default {
       }, response => {
         toastr.error('操作失败');
       });
+    },
+    addTask:function(){
+      this.$router.push('addTask')
     }
 
   }

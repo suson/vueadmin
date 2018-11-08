@@ -23,9 +23,9 @@
         <li>
           <a href="/"><i class="fa fa-th-large"></i> <span class="nav-label">首页</span></a>
         </li>
-        <li class="" v-for="tabItem in tabList">
-          <a href="javascript:void(0);"> <i :class="tabItem.class"></i> <span class="nav-label">{{tabItem.title}}</span><i class="fa arrow"></i></a>
-          <ul class="nav nav-second-level collapse" style="height: 0px;">
+        <li class="" v-for="tabItem in tabList" :class="{active:tabItem.checked}">
+          <a href="javascript:void(0);"> <i :class="tabItem.class"></i> <span class="nav-label">{{tabItem.title}}</span><i @click="tabItem.checked=!tabItem.checked" class="fa arrow"></i></a>
+          <ul class="nav nav-second-level collapse" :class="{collapse:tabItem.checked,in:tabItem.checked}" style="height: 0px;">
             <li v-for="subItem in tabItem.subtab"><a href="javascript:void(0);" :style="subItem.style" @click="select_tab(subItem,tabItem.subtab)">{{subItem.title}}<span v-if="subItem.total>=0" class="label label-success pull-right">{{subItem.total}}</span></a>
             </li>
           </ul>
@@ -124,6 +124,8 @@ export default {
   name: 'LeftContent',
   mounted: function () {
     this.$nextTick(function () {
+      console.log('route--->',this.$route)
+
       this.select_tab(this.tabList[0].subtab[0],this.tabList[0].subtab)
     })
   },
@@ -138,6 +140,7 @@ export default {
         "name": "baidu",
         "title": "百度任务",
         "class":"iconfont icon-baidu",
+        "checked":false,
         "subtab":[
           // {
           //   total:0,
@@ -197,6 +200,7 @@ export default {
       this.$emit('changeRight',item);
       this.eventHub.$emit('reloadList',item);
       console.log(item.name)
+
       if (typeof item.style == 'undefined') {
         this.$set(item,"style",this.selected_tab_style)
       } else {
@@ -209,7 +213,12 @@ export default {
         }
         allItem[i].style = "";
       }
+      if (item.name == 'baidu_speed') {
+        if (this.$route.name != 'addTask') {
 
+          this.$router.push('/')
+        }
+      }
     }
   }
 }

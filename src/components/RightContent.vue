@@ -1,7 +1,10 @@
 <template>
   <div id="page-wrapper" class="gray-bg" style="min-height: 632px;">
     <navt :user_info="user_info" />
-    <table-list :table_config="table_config" />
+    <keep-alive>
+    <component v-bind:is="currentRightComponent" :table_config="table_config"></component>
+    </keep-alive>
+    <!-- <table-list :table_config="table_config" /> -->
   </div>
 </template>
 <script>
@@ -13,7 +16,8 @@ export default {
   props: ['user_info','table_config'],
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App..........'
+      msg: 'Welcome to Your Vue.js App..........',
+      currentRightComponent:'table-list'
     }
   },
   methods:{
