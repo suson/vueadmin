@@ -23,6 +23,14 @@ export default new Router({
       	title: '添加任务'
       },
       component: addTask
+    },
+    {
+      path: '/addTask/:id',
+      name: 'addTask',
+      meta:{
+      	title: '添加任务'
+      },
+      component: addTask
     }
   ]
 })

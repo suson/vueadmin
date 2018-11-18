@@ -3,7 +3,7 @@
     <div class="sidebar-collapse">
       <ul class="nav metismenu" id="side-menu">
         <li class="nav-header">
-          <div class="dropdown profile-element open">
+          <div class="dropdown profile-element">
             <span>
 <a href="/ucenter.html">
 <img src="../../static/picture/thumb_551964ffc06a5.png" style="width: 50px;border-radius: 50%">
@@ -13,7 +13,7 @@
 <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold"></strong>
 </span> <span class="text-muted text-xs block">欢迎回来,{{user_info.name}} <b class="caret"></b></span> </span> </a>
             <ul class="dropdown-menu animated fadeInRight m-t-xs">
-              <li><a href="/signout">退出</a></li>
+              <li><a @click="logout" href="javascript:void(0);">退出</a></li>
             </ul>
           </div>
           <div class="logo-element">
@@ -26,7 +26,7 @@
         <li class="" v-for="tabItem in tabList" :class="{active:tabItem.checked}">
           <a href="javascript:void(0);"> <i :class="tabItem.class"></i> <span class="nav-label">{{tabItem.title}}</span><i @click="tabItem.checked=!tabItem.checked" class="fa arrow"></i></a>
           <ul class="nav nav-second-level collapse" :class="{collapse:tabItem.checked,in:tabItem.checked}" style="height: 0px;">
-            <li v-for="subItem in tabItem.subtab"><a href="javascript:void(0);" :style="subItem.style" @click="select_tab(subItem,tabItem.subtab)">{{subItem.title}}<span v-if="subItem.total>=0" class="label label-success pull-right">{{subItem.total}}</span></a>
+            <li v-for="subItem in tabItem.subtab"><a href="javascript:void(0);" :style="subItem.style" @click="select_tab(subItem,tabItem)">{{subItem.title}}<span v-if="subItem.total>=0" class="label label-success pull-right">{{subItem.total}}</span></a>
             </li>
           </ul>
         </li>
@@ -124,9 +124,9 @@ export default {
   name: 'LeftContent',
   mounted: function () {
     this.$nextTick(function () {
-      console.log('route--->',this.$route)
+      // console.log('route--->',this.$route)
 
-      this.select_tab(this.tabList[0].subtab[0],this.tabList[0].subtab)
+      this.select_tab(this.tabList[0].subtab[0],this.tabList[0],this.$route)
     })
   },
   props: ['user_info','table_config'],
@@ -191,21 +191,22 @@ export default {
       this.$http.post(url,{f:8},{emulateJSON:true,withCredentials:true}).then(response => {
         // success callback
         // this.$router.push('/')
-        window.location.href = this.HOST;
+        window.location.href = 'service/login.html';
       }, response => {
         // error callback
       });
     },
-    select_tab: function(item,allItem){
+    select_tab: function(item,parentItem,route){
       this.$emit('changeRight',item);
       this.eventHub.$emit('reloadList',item);
-      console.log(item.name)
-
+      // console.log('select_tab==========>',item.name)
+      parentItem.checked = true;
       if (typeof item.style == 'undefined') {
         this.$set(item,"style",this.selected_tab_style)
       } else {
         item.style = this.selected_tab_style;
       }
+      var allItem = parentItem.subtab;
       // console.log(allItem)
       for (var i in allItem) {
         if (allItem[i].name == item.name) {
@@ -214,8 +215,13 @@ export default {
         allItem[i].style = "";
       }
       if (item.name == 'baidu_speed') {
-        if (this.$route.name != 'addTask') {
+        // if (this.$route.name != 'addTask') {
 
+        //   this.$router.push('/')
+        // }
+        if (route && route.name == 'addTask') {
+
+        } else {
           this.$router.push('/')
         }
       }

@@ -1,5 +1,5 @@
 <template>
-  <div id="page-wrapper" class="gray-bg" style="min-height: 632px;">
+  <div id="page-wrapper" class="gray-bg">
     <navt :user_info="user_info" />
     <keep-alive>
     <component v-bind:is="currentRightComponent" :table_config="table_config"></component>
@@ -27,7 +27,7 @@ export default {
 
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style >
+<style scoped>
 @import '../../static/css/jquery.resizablecolumns.css';
 
 td {

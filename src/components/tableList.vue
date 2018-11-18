@@ -152,9 +152,10 @@
                 <th rowspan="2" style="vertical-align: middle; width: 10.23%;">
                   标题
                 </th>
-                <th rowspan="2" style="vertical-align: middle;" class="hidden-md hidden-sm  hidden-xs">URL</th>
+                <th rowspan="2" style="vertical-align: middle;" class="hidden-md hidden-sm  hidden-xs">网址</th>
+                <th rowspan="2" style="vertical-align: middle;" class="hidden-md hidden-sm  hidden-xs">关键字</th>
                 <!-- <th colspan="3" style="vertical-align: middle; text-align: center; width: 29.51%;" class="hide">次数</th> -->
-                <th rowspan="2" style="vertical-align: middle; text-align: center; width: 9.51%;" class="hidden-md hidden-sm  hidden-xs">今日分享</th>
+                <th rowspan="2" style="vertical-align: middle; width: 9.51%;" class="hidden-md hidden-sm  hidden-xs">今日分享</th>
                 <!-- <th rowspan="2" style="vertical-align: middle; text-align: center; width: 11.55%;" class="hide hidden-md hidden-sm  hidden-xs">
                   自动重启
                 </th> -->
@@ -173,10 +174,11 @@
               <tr v-for="item in listData" v-bind:key="item.urlid">
                 <td><input type="checkbox" @click="selectItem(item)" v-model="item.checked">{{item.urlid}}</td>
                 <td :title="item.name">{{item.name}}</td>
-                <td :title="item.turl">{{item.turl}}</td>
+                <td :title="item.turl | filterUrl('url')">{{item.turl | filterUrl('url')}}</td>
+                <td :title="item.turl | filterUrl('keyword')">{{item.turl | filterUrl('keyword')}}</td>
                 <td>{{item.tdclick}}</td>
                 <td>{{item.online | urlStatusName}}-{{item.free | shareStatusName}}</td>
-                <td></td>
+                <td><a href="javascript:void(0);" @click="edit(item)">修改</a></td>
               </tr>
               </tbody>
                 <!-- </transition-group> -->
@@ -191,11 +193,12 @@
                   标题
                   <!-- <a href="javascript:void(0);" class="sort ">标题</a> -->
                 </td>
-                <td style="vertical-align:middle;" class="hidden-md hidden-sm  hidden-xs">URL</td>
+                <td style="vertical-align:middle;" class="hidden-md hidden-sm  hidden-xs">网址</td>
+                <td style="vertical-align:middle;" class="hidden-md hidden-sm  hidden-xs">关键字</td>
                 <!-- <td style="text-align: center;" class="hide">今日</td>
                 <td style="text-align: center;" class="hide">已完成</td>
                 <td style="text-align: center;" class="hide">总次数</td> -->
-                <td style="vertical-align:middle;text-align: center;" class="hidden-md hidden-sm  hidden-xs">今日分享</td>
+                <td style="vertical-align:middle;" class="hidden-md hidden-sm  hidden-xs">今日分享</td>
                 <!-- <td style="vertical-align:middle; text-align: center" class="hide hidden-md hidden-sm  hidden-xs">
                   自动重启
                 </td> -->
@@ -236,24 +239,8 @@ export default {
   props: ['table_config'],
   mounted: function () {
     this.$nextTick(function () {
-      //消息通知
-      toastr.options = {
-          "closeButton": false, //关闭按钮
-          "debug": false, //调试开关
-          "progressBar": false, //进度条
-          "preventDuplicates": true, //防止重复
-          "positionClass": "toast-top-center", //顶部中间
-          "onclick": null, //点击回调
-          "showDuration": "400", //显示时间
-          "hideDuration": "1000", //隐藏时间
-          "timeOut": "2000", //缓冲时间
-          "extendedTimeOut": "1000",
-          "showEasing": "swing", //显示动画
-          "hideEasing": "linear", //隐藏动画
-          "showMethod": "fadeIn", //显示方式
-          "hideMethod": "fadeOut" //隐藏方式
-      };
-      this.getList();
+      
+      // this.getList();
     })
   },
   created:function() {
@@ -297,6 +284,17 @@ export default {
 
       }
       return name;
+    },
+    filterUrl:function(data,type) {
+      data = data.split("|");
+      switch(type) {
+        case 'url':
+            return data[0] || '';
+          break;
+        case 'keyword':
+            return data[1] || '';
+          break;
+      }
     }
   },
   methods:{
@@ -362,7 +360,7 @@ export default {
     // 单选
     selectItem : function(item) {
       item.checked = !item.checked;
-      console.log(this.listData)
+      // console.log(this.listData)
       var isAll = true;
       for (var i in this.listData) {
         if (this.listData[i].checked != true) {
@@ -421,6 +419,9 @@ export default {
     },
     addTask:function(){
       this.$router.push('addTask')
+    },
+    edit:function(item) {
+      this.$router.push({path: '/addTask/'+item.urlid})
     }
 
   }

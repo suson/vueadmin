@@ -39,7 +39,7 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App..........',
       user_info:{},
-      table_config:{}
+      table_config:{name:'baidu_speed'}
     }
   },
   methods:{
@@ -54,9 +54,9 @@ export default {
       });
     },
     changeRight:function(data){
-      console.log(data);
+      // console.log('changeRight1======>',data);
       this.table_config=data;
-      console.log(this.$refs);
+      // console.log('changeRight2======>',this.$refs);
     }
   }
 }
